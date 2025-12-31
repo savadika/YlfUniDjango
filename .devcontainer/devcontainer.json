@@ -1,0 +1,21 @@
+{
+	"name": "UniDjango Dev Environment",
+	"dockerComposeFile": [
+		"../docker-compose.yml",
+		"../docker-compose-dev.yml"
+	],
+	"service": "backend",
+	"workspaceFolder": "/app",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-azuretools.vscode-docker",
+				"octref.vetur", 
+				"dbaeumer.vscode-eslint"
+			]
+		}
+	},
+	"forwardPorts": [8000, 3308, 9528],
+	"remoteUser": "root"
+}

@@ -1,0 +1,52 @@
+
+services:
+  # 1. 数据库服务
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    container_name: ylf-mysql-with-data
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Pm6yj3333
+      MYSQL_DATABASE: unidjango
+    networks:
+      - ylf-network
+    ports:
+      - "3308:3306"
+
+  # 2. 后端服务 (Django)
+  backend:
+    build:
+      context: ./UniDjango
+    container_name: ylf-django
+    restart: always
+    environment:
+      DB_HOST: ylf-mysql-with-data
+    volumes:
+      - ./UniDjango/media:/app/media
+    depends_on:
+      - db
+    networks:
+      - ylf-network
+    ports:
+      - "8000:8000"
+
+  # 3. 前端服务 (Vue + Nginx) - 生产环境模式
+  frontend:
+    build:
+      context: ./frontend  # <--- 注意这里改成了相对路径
+    container_name: ylf-vue
+    restart: always
+    ports:
+      # - "80:80" # 开发模式下注释掉，避免端口冲突
+      - "8080:80" # 映射到其他端口
+    depends_on:
+      - backend
+    networks:
+      - ylf-network
+
+networks:
+  ylf-network:
+    driver: bridge

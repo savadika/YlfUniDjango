@@ -1,0 +1,45 @@
+[
+    {
+        "model": "role.SysRole",
+        "pk": 1,
+        "fields": {
+            "name": "super_admin",
+            "code": "10000",
+            "remark": "系统管理员",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01"
+        }   
+    },
+    {
+        "model": "role.SysRole",
+        "pk": 2,
+        "fields": {
+            "name": "admin",
+            "code": "10001",
+            "remark": "普通管理员",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01"
+        }
+    },
+    {
+        "model": "role.SysRole",
+        "pk": 3,
+        "fields": {
+            "name": "user",
+            "code": "10002",
+            "remark": "普通用户",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01"
+        }
+    },
+
+    {
+        "model": "role.SysUserRole", 
+        "pk": 1,
+        "fields": {
+          "role": 1,
+          "user": 2
+        }
+    }
+
+]

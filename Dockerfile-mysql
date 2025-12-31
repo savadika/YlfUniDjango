@@ -1,0 +1,3 @@
+FROM mysql:8.0
+COPY UniDjango/backup.sql /docker-entrypoint-initdb.d/init.sql
+ENV LANG=C.UTF-8

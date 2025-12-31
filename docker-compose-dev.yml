@@ -1,0 +1,30 @@
+
+services:
+  backend:
+    entrypoint: ["/wait-for-mysql.sh", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./UniDjango:/app
+    environment:
+      - DEBUG=1
+
+  frontend:
+    # 开发模式：使用专门的 Node 开发镜像
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: ylf-vue:dev
+    working_dir: /app
+    volumes:
+      - ./frontend:/app  # <--- 挂载源码，实现热重载
+      - /app/node_modules # <--- 隔离 node_modules，避免宿主机与容器环境冲突
+    # 启动命令：安装依赖并启动开发服务器
+    # 注意：第一次启动可能会慢，因为要 install
+    command: bash -c "npm config set registry https://registry.npmmirror.com && npm install && npm run dev"
+    stdin_open: true # 相当于 -i
+    tty: true        # 相当于 -t
+    ports:
+      - "9528:9528"  # 开发服务器端口
+    environment:
+      - NODE_ENV=development
+    networks:
+      - ylf-network

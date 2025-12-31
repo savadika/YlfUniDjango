@@ -1,0 +1,121 @@
+[
+    {
+        "model": "menu.SysMenu",
+        "pk": 1,
+        "fields": {
+            "name": "系统管理",
+            "icon": "system",
+            "parent_id": "0",
+            "order_num": "0",
+            "path": "/system",
+            "component": "/system/index.vue",
+            "menu_type": "M",
+            "perms": "system:*:*",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "系统管理目录"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 2,
+        "fields": {
+            "name": "业务管理",
+            "icon": "monitor",
+            "parent_id": "0",
+            "order_num": "1",
+            "path": "/bu",
+            "component": "/bu/index.vue",
+            "menu_type": "M",
+            "perms": "bu:*:*",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "业务管理目录"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 3,
+        "fields": {
+            "name": "用户管理",
+            "icon": "user",
+            "parent_id": "1",
+            "order_num": "1",
+            "path": "/system/user",
+            "component": "/system/user/index.vue",
+            "menu_type": "C",
+            "perms": "system:user:list",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "系统管理-用户管理"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 4,
+        "fields": {
+            "name": "角色管理",
+            "icon": "role",
+            "parent_id": "1",
+            "order_num": "2",
+            "path": "/system/role",
+            "component": "/system/role/index.vue",
+            "menu_type": "C",
+            "perms": "system:role:list",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "系统管理-角色管理"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 5,
+        "fields": {
+            "name": "菜单管理",
+            "icon": "menu",
+            "parent_id": "1",
+            "order_num": "3",
+            "path": "/system/menu",
+            "component": "/system/menu/index.vue",
+            "menu_type": "C",
+            "perms": "system:menu:list",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "系统管理-菜单管理"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 6,
+        "fields": {
+            "name": "部门管理",
+            "icon": "department",
+            "parent_id": "2",
+            "order_num": "1",
+            "path": "/bu/department",
+            "component": "/bi/department/index.vue",
+            "menu_type": "C",
+            "perms": "monitor:department:list",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "业务管理-部门管理"
+        }   
+    },
+    {
+        "model": "menu.SysMenu",
+        "pk": 7,
+        "fields": {
+            "name": "方位管理",
+            "icon": "position",
+            "parent_id": "2",
+            "order_num": "2",
+            "path": "/bu/position",
+            "component": "/bi/position/index.vue",
+            "menu_type": "C",
+            "perms": "monitor:position:list",
+            "create_time": "2023-10-01",
+            "update_time": "2023-10-01",
+            "remark": "业务管理-岗位管理"
+        }   
+    }
+]
