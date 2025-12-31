@@ -5,7 +5,7 @@ services:
     volumes:
       - ./UniDjango:/app
     environment:
-      - DEBUG=1
+      - DEBUG=True
 
   frontend:
     # 开发模式：使用专门的 Node 开发镜像

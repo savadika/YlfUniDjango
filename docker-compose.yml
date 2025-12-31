@@ -24,6 +24,7 @@ services:
     restart: always
     environment:
       DB_HOST: ylf-mysql-with-data
+      DEBUG: "False"
     volumes:
       - ./UniDjango/media:/app/media
     depends_on:

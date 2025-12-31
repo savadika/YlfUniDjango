@@ -75,46 +75,100 @@ Docker 会自动构建新镜像并初始化干净的数据库。
 
 > **💡 提示**: 您也可以使用 `tools/project_cloner.html` 工具来生成自动克隆脚本。双击打开该文件即可使用。
 
-## 🚀 部署到服务器 (生产环境)
+## 🚀 部署到阿里云/Linux 服务器 (详细指南)
 
-当您在本地开发完成，准备部署到 Linux 服务器（如 CentOS/Ubuntu）时，请遵循以下步骤：
+本指南将帮助你将项目部署到阿里云 ECS 或任何 Linux 云服务器。
 
-### 1. 服务器准备
-确保服务器已安装 Docker 和 Docker Compose。
+### 1. 准备工作
+
+#### 1.1 购买服务器 (ECS)
+*   **操作系统**: 推荐 **Ubuntu 20.04/22.04 LTS** (CentOS 也可以，但 Ubuntu 对 Docker 支持更友好)。
+*   **配置**: 至少 **2核 4G** (因为需要运行 MySQL + Django + Vue构建 + Nginx)。
+*   **安全组 (防火墙)**: 记得在阿里云控制台开放以下端口：
+    *   `80`: 前端访问 (可选，如果配置了 80)
+    *   `8080`: 前端访问 (如果 docker-compose 映射的是 8080)
+    *   `22`: SSH 连接
+
+#### 1.2 连接服务器
+使用 SSH 工具 (如 PuTTY, XShell, 或 VS Code Remote SSH) 连接到你的服务器。
+
 ```bash
-# 以 Ubuntu 为例安装 Docker
-curl -fsSL https://get.docker.com | bash
+ssh root@你的服务器公网IP
 ```
 
-### 2. 代码上传
-将项目代码上传到服务器（可以使用 Git 或 SCP）。
-```bash
-# 方式 A: Git (推荐)
-git clone https://your-repo.com/UniDjango.git
-cd UniDjango
+### 2. 环境安装
 
-# 方式 B: SCP 上传
-scp -r d:\UniDjango root@your-server-ip:/opt/
+在服务器上执行以下命令安装 Docker 和 Docker Compose：
+
+```bash
+# 更新软件源
+sudo apt-get update
+
+# 安装 Docker
+sudo apt-get install -y docker.io
+
+# 启动 Docker 并设置开机自启
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 安装 Docker Compose
+sudo apt-get install -y docker-compose
 ```
 
-### 3. 启动服务
-在服务器上，我们只需要运行**生产模式**（不需要 `-dev` 文件）。
+### 3. 上传代码
+
+你可以通过以下两种方式之一上传代码：
+
+#### 方式 A：使用 Git (推荐)
+如果你的代码托管在 GitHub/Gitee/GitLab：
+```bash
+git clone https://你的仓库地址.git
+cd 你的项目目录
+```
+
+#### 方式 B：直接上传文件 (适合本地开发)
+使用 SCP 或 SFTP 工具 (如 WinSCP, FileZilla) 将本地的项目文件夹上传到服务器的 `/opt/` 或 `/home/` 目录下。
+
+### 4. 启动部署
+
+进入项目目录，运行生产环境启动命令：
+
 ```bash
 # 1. 进入目录
-cd /opt/UniDjango
+cd /path/to/your/project
 
-# 2. 启动 (后台运行)
-docker-compose up -d --build
+# 2. 启动服务 (后台运行)
+# 注意：只使用 docker-compose.yml (生产配置)，不要加 -dev.yml
+sudo docker-compose -f docker-compose.yml up -d --build
 ```
 
-### 4. 数据迁移 (可选)
-如果是首次部署，Docker 会自动读取 `backup.sql` 初始化数据库。
-如果是后续更新代码，可能需要执行数据库迁移：
-```bash
-docker exec -it ylf-django python manage.py migrate
-```
+### 5. 验证部署
 
-### 5. 访问
-直接访问服务器 IP 即可：`http://your-server-ip`。前端 Nginx 会自动处理静态文件转发和反向代理。
+*   **查看运行状态**:
+    ```bash
+    sudo docker-compose ps
+    ```
+    你应该能看到 `frontend`, `backend`, `db` 三个容器都在 `Up` 状态。
+
+*   **查看日志** (如果启动失败):
+    ```bash
+    sudo docker-compose logs -f
+    ```
+
+*   **访问网站**:
+    打开浏览器，访问 `http://你的服务器公网IP:8080` (取决于 docker-compose.yml 中 frontend 的端口映射)。
+
+### 6. 常见问题
+
+#### 端口冲突
+如果提示端口被占用，请修改 `docker-compose.yml` 中的 `ports` 部分，例如将 `8080:80` 改为 `8081:80`。
+
+#### 数据库数据
+首次启动时，数据库是空的。如果需要导入数据：
+1.  将本地的 SQL 文件上传到服务器。
+2.  进入数据库容器导入：
+    ```bash
+    cat backup.sql | sudo docker exec -i 容器名 mysql -u root -p密码 数据库名
+    ```
 
 
