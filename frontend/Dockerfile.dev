@@ -1,0 +1,5 @@
+FROM node:22
+
+WORKDIR /app
+
+# 只是一个基础的 Node 环境，实际代码通过 Volume 挂载

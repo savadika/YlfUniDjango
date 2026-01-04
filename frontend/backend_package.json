@@ -1,0 +1,25 @@
+{
+  "name": "vue-admin-backend",
+  "version": "1.0.0",
+  "description": "Simple backend server for Vue Admin Template",
+  "main": "backend_server.js",
+  "scripts": {
+    "start": "node backend_server.js",
+    "dev": "nodemon backend_server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "backend",
+    "vue"
+  ],
+  "author": "Assistant",
+  "license": "MIT"
+}
