@@ -1,18 +1,46 @@
 
 services:
   backend:
-    entrypoint: ["/wait-for-mysql.sh", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    build:
+      context: ./UniDjango
+    image: ${BACKEND_CONTAINER_NAME}:latest
+    entrypoint: ["/wait-for-mysql.sh", "python", "manage.py", "runserver", "0.0.0.0:${BACKEND_INTERNAL_PORT}"]
     volumes:
       - ./UniDjango:/app
     environment:
       - DEBUG=True
+      - DB_HOST=${MYSQL_CONTAINER_NAME}
+    container_name: ${BACKEND_CONTAINER_NAME}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_INTERNAL_PORT}"
+    depends_on:
+      - db
+    networks:
+      - ylf-network
+
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    image: ${MYSQL_CONTAINER_NAME}:latest
+    container_name: ${MYSQL_CONTAINER_NAME}
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_INTERNAL_PORT}"
+    networks:
+      - ylf-network
 
   frontend:
     # 开发模式：使用专门的 Node 开发镜像
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    image: ylf-vue:dev
+    image: ${FRONTEND_CONTAINER_NAME}:dev
+    container_name: ${FRONTEND_CONTAINER_NAME}
     working_dir: /app
     volumes:
       - ./frontend:/app  # <--- 挂载源码，实现热重载
@@ -23,8 +51,18 @@ services:
     stdin_open: true # 相当于 -i
     tty: true        # 相当于 -t
     ports:
-      - "9528:9528"  # 开发服务器端口
+      - "${FRONTEND_DEV_PORT}:${FRONTEND_DEV_INTERNAL_PORT}"  # 开发服务器端口
     environment:
       - NODE_ENV=development
+      # 传递端口给 Vue CLI
+      - port=${FRONTEND_DEV_INTERNAL_PORT}
+      # 传递外部端口给 Vue CLI 用于显示
+      - EXTERNAL_PORT=${FRONTEND_DEV_PORT}
+      # 传递后端端口给 Vue 代码使用
+      - VUE_APP_BACKEND_PORT=${BACKEND_PORT}
     networks:
       - ylf-network
+
+networks:
+  ylf-network:
+    driver: bridge
