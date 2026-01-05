@@ -20,6 +20,8 @@ COPY . /app/
 
 # 添加等待脚本
 COPY wait-for-mysql.sh /wait-for-mysql.sh
+# 修复windows下的问题
+RUN sed -i 's/\r$//' /wait-for-mysql.sh
 RUN chmod +x /wait-for-mysql.sh
 RUN apt-get update && apt-get install -y netcat-openbsd
 
